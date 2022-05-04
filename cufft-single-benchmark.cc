@@ -36,23 +36,37 @@ static void cu_fft_single(benchmark::State& state) {
   generate_signal(h_signal, N);
 
   for (auto _ : state) {
-    //  Start iteration timer
-    auto start = std::chrono::high_resolution_clock::now();
+    
 
     // Copy host memory to device
     checkCudaErrors(cudaMemcpy(d_signal, h_signal, N * sizeof(cufftComplex), cudaMemcpyHostToDevice));
+    checkCudaErrors(cudaDeviceSynchronize());
+    //  Start iteration timer
+    //auto start = std::chrono::high_resolution_clock::now();
+    cudaEvent_t start, stop;
+  cudaEventCreate(&start);
+  cudaEventCreate(&stop);
+    cudaEventRecord(start, 0);
 
     // Transform signal to fft (inplace)
     checkCudaErrors(cufftExecC2C(plan, (cufftComplex *)d_signal, (cufftComplex *)d_signal, CUFFT_FORWARD));
 
-    // Copy device memory to host fft
-    checkCudaErrors(cudaMemcpy(h_fft, d_signal, N * sizeof(cufftComplex), cudaMemcpyDeviceToHost));
-
+    //checkCudaErrors(cudaDeviceSynchronize());
+    cudaEventRecord(stop,0);
+    cudaEventSynchronize(stop);
+    float elapsed;
+    cudaEventElapsedTime(&elapsed, start, stop);
     //  Calculate elapsed time
-    auto elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start);
+    //auto elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start);
+
+    // Copy device memory to host fft
+    //checkCudaErrors(cudaMemcpy(h_fft, d_signal, N * sizeof(cufftComplex), cudaMemcpyDeviceToHost));
+
+    
 
     //  Set Iteration Time
-    state.SetIterationTime(elapsed_seconds.count());
+    //state.SetIterationTime(elapsed_seconds.count());
+    state.SetIterationTime(elapsed/1000.0f);
   }
 
   // Destroy CUFFT context

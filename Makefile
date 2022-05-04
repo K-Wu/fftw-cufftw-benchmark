@@ -3,57 +3,29 @@ CFLAGS  := -std=c++11 -O2 -g -Wall -Wextra -Wshadow -pedantic -I/usr/local/cuda/
 
 LDFLAGS := -L=/usr/local/cuda/targets/x86_64-linux/lib -lbenchmark -lm
 
-all: fftw3-benchmark fftw3f-benchmark fftw3l-benchmark cufftw-benchmark cufftwf-benchmark cufft-single-benchmark cufft-double-benchmark cufft-single-unified-benchmark
+all: cufft-single-benchmark cufft-single-2d-benchmark cufft-single-3d-benchmark
 
-fftw3-benchmark: fftw3-benchmark.o
-	$(CC) -o $@ $^ $(LDFLAGS) -lfftw3
-
-fftw3-benchmark.o: fftw3-benchmark.cc
-	$(CC) -c $(CFLAGS) $<
-	
-fftw3f-benchmark: fftw3f-benchmark.o
-	$(CC) -o $@ $^ $(LDFLAGS) -lfftw3f
-
-fftw3f-benchmark.o: fftw3f-benchmark.cc
-	$(CC) -c $(CFLAGS) $<
-	
-fftw3l-benchmark: fftw3l-benchmark.o
-	$(CC) -o $@ $^ $(LDFLAGS) -lfftw3l
-
-fftw3l-benchmark.o: fftw3l-benchmark.cc
-	$(CC) -c $(CFLAGS) $<
-	
-cufftw-benchmark: cufftw-benchmark.o
-	$(CC) -o $@ $^ $(LDFLAGS) -lcufftw
-
-cufftw-benchmark.o: cufftw-benchmark.cc
-	$(CC) -c $(CFLAGS) $<
-	
-cufftwf-benchmark: cufftwf-benchmark.o
-	$(CC) -o $@ $^ $(LDFLAGS) -lcufftw
-
-cufftwf-benchmark.o: cufftwf-benchmark.cc
-	$(CC) -c $(CFLAGS) $<
 	
 cufft-single-benchmark: cufft-single-benchmark.o
 	$(CC) -o $@ $^ $(LDFLAGS) -lcufft -lcudart
 
 cufft-single-benchmark.o: cufft-single-benchmark.cc
-	$(CC) -c $(CFLAGS) $<
-	
-cufft-double-benchmark: cufft-double-benchmark.o
+	$(CC) -c $(CFLAGS) -ICommon/ $<
+
+cufft-single-2d-benchmark: cufft-single-2d-benchmark.o
 	$(CC) -o $@ $^ $(LDFLAGS) -lcufft -lcudart
 
-cufft-double-benchmark.o: cufft-double-benchmark.cc
-	$(CC) -c $(CFLAGS) $<
-	
-cufft-single-unified-benchmark: cufft-single-unified-benchmark.o
+cufft-single-2d-benchmark.o: cufft-single-2d-benchmark.cc
+	$(CC) -c $(CFLAGS) -ICommon/ $<
+
+cufft-single-3d-benchmark: cufft-single-3d-benchmark.o
 	$(CC) -o $@ $^ $(LDFLAGS) -lcufft -lcudart
 
-cufft-single-unified-benchmark.o: cufft-single-unified-benchmark.cc
-	$(CC) -c $(CFLAGS) $<
+cufft-single-3d-benchmark.o: cufft-single-3d-benchmark.cc
+	$(CC) -c $(CFLAGS) -ICommon/ $<
+
 
 .PHONY: clean
 
 clean:
-	rm *.o fftw3-benchmark fftw3f-benchmark fftw3l-benchmark cufftw-benchmark cufftwf-benchmark cufft-single-benchmark cufft-double-benchmark cufft-single-unified-benchmark
+	rm *.o cufft-single-2d-benchmark cufft-single-3d-benchmark cufft-single-benchmark 
