@@ -33,6 +33,8 @@
 
 cufft-double-benchmark
 cufft-single-benchmark
+cufft-single-2d-benchmark
+cufft-single-3d-benchmark
 cufft-single-unified-benchmark
 cufftw-benchmark
 cufftwf-benchmark
