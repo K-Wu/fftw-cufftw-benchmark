@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+cufft-double-benchmark
+cufft-single-benchmark
+cufft-single-unified-benchmark
+cufftw-benchmark
+cufftwf-benchmark
+fftw3-benchmark
+fftw3f-benchmark
+fftw3l-benchmark
