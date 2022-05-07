@@ -3,8 +3,19 @@ CFLAGS  := -std=c++11 -O2 -g -Wall -Wextra -Wshadow -pedantic -I/usr/local/cuda/
 
 LDFLAGS := -L=/usr/local/cuda/targets/x86_64-linux/lib -lbenchmark -lm
 
-all: cufft-single-benchmark cufft-single-2d-benchmark cufft-single-3d-benchmark
+all: cufft-single-benchmark cufft-single-2d-benchmark cufft-single-3d-benchmark cufft-single-benchmark-planning-only cufft-single-2d-benchmark-planning-only
 
+cufft-single-benchmark-planning-only: cufft-single-benchmark-planning-only.o
+	$(CC) -o $@ $^ $(LDFLAGS) -lcufft -lcudart
+
+cufft-single-benchmark-planning-only.o: cufft-single-benchmark-planning-only.cc
+	$(CC) -c $(CFLAGS) -ICommon/ $<
+
+cufft-single-2d-benchmark-planning-only: cufft-single-2d-benchmark-planning-only.o
+	$(CC) -o $@ $^ $(LDFLAGS) -lcufft -lcudart
+
+cufft-single-2d-benchmark-planning-only.o: cufft-single-2d-benchmark-planning-only.cc
+	$(CC) -c $(CFLAGS) -ICommon/ $<
 	
 cufft-single-benchmark: cufft-single-benchmark.o
 	$(CC) -o $@ $^ $(LDFLAGS) -lcufft -lcudart
@@ -28,4 +39,4 @@ cufft-single-3d-benchmark.o: cufft-single-3d-benchmark.cc
 .PHONY: clean
 
 clean:
-	rm *.o cufft-single-2d-benchmark cufft-single-3d-benchmark cufft-single-benchmark 
+	rm *.o cufft-single-2d-benchmark cufft-single-3d-benchmark cufft-single-benchmark   cufft-single-benchmark-planning-only cufft-single-2d-benchmark-planning-only
